@@ -1,3 +1,7 @@
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,32 +13,45 @@ import org.openqa.selenium.chrome.ChromeDriver;
   adăugarea în wishlist poate fi realizată doar de utilizatorii autentificați. Apelati metoda aceasta in metoda main
   pentru a rula testul.*/
 public class WishlistTest {
-    public void addToWishlistTestfromVIP(){
+    private WebDriver driver;
 
+    @Before
+    public void initDriver() {
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
+
+
         driver.manage().window().maximize();
         driver.get("http://testfasttrackit.info/selenium-test/");
-        driver.findElement(By.cssSelector("#nav > ol > li.level0.nav-6 > a")).click();
-        driver.findElement(By.cssSelector("body > div > div.page > div.main-container.col3-layout > div > div.col-wrapper > div.col-main > div.category-products > ul > li:nth-child(1) > div > div.actions > a")).click();
-        driver.findElement(By.cssSelector("#product_addtocart_form > div.product-shop > div.product-options-bottom > ul.add-to-links > li:nth-child(1) > a")).click();
-        driver.findElement(By.id("email")).sendKeys("simina.dranca@yahoo.com");
-        driver.findElement(By.id("pass")).sendKeys("654321");
-        driver.findElement(By.id("send2")).click();
-        //driver.findElement(By.cssSelector("#nav > ol > li.level0.nav-6 > a")).click();
-        //driver.findElement(By.cssSelector("body > div > div.page > div.main-container.col3-layout > div > div.col-wrapper > div.col-main > div.category-products > ul > li:nth-child(1) > div > div.actions > a")).click();
-        //driver.findElement(By.cssSelector("#product_addtocart_form > div.product-shop > div.product-options-bottom > ul.add-to-links > li:nth-child(1) > a")).click();
-
-
-        WebElement wishlistTextElement = driver.findElement(By.cssSelector("#item_1278 > td.wishlist-cell1.customer-wishlist-item-info > h3 > a"));
-
-        String expectedText = "LEXINGTON CARDIGAN SWEATER";
-        String actualText = wishlistTextElement.getText();
-
-        if (actualText.equals(expectedText)) {
-            System.out.println("Adăugat cu succes în wishlist-ul tău!");
-        } else
-            System.err.println("Produsul nu se află în wishlist-ul tău!");
 
     }
-}
+        @Test
+        public void addToWishlistTestfromVIP(){
+
+
+            driver.findElement(By.cssSelector("a[href*=\"#header-nav\"]")).click();
+            driver.findElement(By.cssSelector("li[class*=\"level0 nav-6\"]")).click();
+            driver.findElement(By.cssSelector("a[class*=\"wish\"]")).click();
+            driver.findElement(By.id("email")).sendKeys("simina.dranca@yahoo.com");
+            driver.findElement(By.id("pass")).sendKeys("654321");
+            driver.findElement(By.id("send2")).click();
+
+            WebElement wishlistTextElement = driver.findElement(By.cssSelector("#item_1278 > td.wishlist-cell1.customer-wishlist-item-info > h3 > a"));
+
+            String expectedText = "LEXINGTON CARDIGAN SWEAER";
+            String actualText = wishlistTextElement.getText();
+            Assert.assertEquals(expectedText,actualText);
+
+            /*if (actualText.equals(expectedText)) {
+                System.out.println("Adăugat cu succes în wishlist-ul tău!");
+            } else
+                System.err.println("Produsul nu se află în wishlist-ul tău!");*/
+
+        }
+
+        @After
+        public void quit()
+        {
+            driver.close();
+        }
+    }
